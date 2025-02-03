@@ -1,0 +1,354 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;600&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    background: #222;
+    color: #fff;
+}
+
+.container {
+    display: flex;
+    width: 100%;
+}
+
+.sidebar {
+    width: 15%;
+    background: #D9D9D9;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+    text-align: center;
+    position: relative;
+    
+}
+
+.sidebar .logo img {
+    width: 100px;
+    height: 100px;
+    border-radius: 80%;
+    max-height: 100%;
+    height: auto;
+}
+
+.lf-text {
+
+
+   height: 100%;
+   width: 100%;
+    transform: rotate(-90deg);
+    display: flex;
+    justify-content: center;
+    rotate: 360deg;
+}
+.sidebar .lf-text{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+
+.main-content {
+    width: 85%;
+    padding: 20px 40px;
+}
+
+nav ul {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    margin-bottom: 40px;
+    padding: 10px;
+    border-bottom: 2px solid #fff;
+}
+
+nav ul li {
+    margin: 0 20px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #fff;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.card {
+    background: linear-gradient(to right, gold, #b8860b);
+    padding: 20px;
+    border-radius: 0px 20px 0px 20px;/* Har corner alag-alag radius */
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    position: relative;
+    margin-right: 30px;
+    margin-bottom: 30px;
+    padding: 30px;
+}
+
+.card-header {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.card-body {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.card-body img {
+    width: 120px;
+   
+    border-radius: 0px 20px 0px 20px; /* Har corner alag radius */
+    box-shadow: 10px 10px 10px 0px rgba(0, 0, 0, 0.3);
+}
+
+.card-body img:hover, 
+.card-footer img:hover, 
+.sidebar .logo img:hover {
+    transform: scale(1.2); /* Slightly enlarge the image */
+    transition: transform 0.3s ease-in-out;
+    filter: brightness(1.2); /* Increase brightness */
+    transform: scale(1.2);
+    transition: transform 0.3s ease-in-out;
+    
+}
+
+.card-body p {
+    display: flex;
+    font-size: 14px;
+    margin: 0;
+}
+
+.card-footer {
+    margin-top: 15px;
+}
+
+.card-footer img {
+    width: 30px;
+}
+
+.footer {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 10px;
+    background: #999;
+    border-radius: 10px;
+}
+
+/* For screens larger than 768px */
+@media only screen and (min-width: 768px) {
+    .container {
+        display: flex;
+    }
+
+    .sidebar {
+        width: 15%;
+    }
+
+    .main-content {
+        width: 85%;
+    }
+
+    .cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .card-body img {
+        width: 120px;
+    }
+
+    .card-footer img {
+        width: 30px;
+    }
+
+    .footer {
+        font-size: 20px;
+    }
+
+    .lf-text {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+    }
+}
+
+/* For screens between 480px and 767px */
+@media only screen and (max-width: 767px) and (min-width: 480px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        text-align: center;
+    }
+
+    .main-content {
+        width: 100%;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .cards {
+        grid-template-columns: repeat(1, 1fr);
+        gap: 15px;
+    }
+
+    .card-body img {
+        width: 100px;
+    }
+
+    .footer {
+        font-size: 16px;
+    }
+
+    .lf-text {
+        transform: rotate(0deg); /* Reset rotation on smaller screens */
+    }
+
+    /* Set nav bar in a vertical column */
+    nav ul {
+        display: flex;
+        flex-direction: column;  /* Make items stack vertically */
+        align-items: center;     /* Center the links */
+        padding: 10px;
+    }
+
+    nav ul li {
+        margin: 5px 0; /* Add space between items */
+    }
+}
+
+/* For screens smaller than 480px */
+@media only screen and (max-width: 479px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        text-align: center;
+        padding: 10px;
+    }
+
+    .main-content {
+        width: 100%;
+        padding: 10px;
+    }
+    
+    .cards {
+        grid-template-columns: repeat(1, 1fr);
+        gap: 10px;
+    }
+
+    .card-body img {
+        width: 80px;
+    }
+
+    .footer {
+        font-size: 14px;
+    }
+
+    .lf-text {
+        transform: rotate(0deg); /* Reset rotation on smaller screens */
+    }
+
+    /* Set nav bar in a vertical column */
+    nav ul {
+        display: flex;
+        flex-direction: column;  /* Stack items vertically */
+        align-items: center;     /* Center the links */
+        padding: 10px;
+    }
+
+    nav ul li {
+        margin: 5px 0; /* Add space between items */
+    }
+}
+
+/* Footer styles */
+footer {
+    background-color: #222;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+    margin-top: auto;  /* Push the footer to the bottom */
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-content p {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.footer-links {
+    margin-top: 10px;
+}
+
+.footer-links a {
+    text-decoration: none;
+    color: #f0a500;
+    margin: 0 15px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.footer-links a:hover {
+    color: #fff;
+}
+
+
+button{
+    border: none;
+    border-radius: 15px;
+    padding: 10px;
+    background-color: #222;
+    color: white;
+}
+button:hover
+{
+    background-color: #627de0;
+}
+
+.title{
+    border-radius: 0px 50px 0px 50px;
+    background-color: #999;
+    text-align: center;
+    margin: 50px;
+    padding: 20px;
+    background-image: url("logo8.jpg");
+    box-shadow: 10px 10px 20px 0px;
+}

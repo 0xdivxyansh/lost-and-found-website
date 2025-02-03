@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lost and Found</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: black; color: white; }
+        .navbar { background: #333; padding: 15px; text-align: center; }
+        .navbar a { color: white; text-decoration: none; margin: 15px; font-size: 18px; }
+        .container { padding: 20px; text-align: center; }
+        .hidden { display: none; }
+        input, button, textarea { margin: 10px; padding: 10px; width: 250px; background-color: #222; border: 1px solid #444; color: white; }
+        .gallery img { width: 150px; height: 150px; margin: 10px; border: 2px solid #333; cursor: pointer; }
+        .chat-box { background-color: #222; border-radius: 10px; padding: 10px; margin: 10px; max-height: 200px; overflow-y: auto; }
+        .chat-box div { margin-bottom: 10px; }
+        .found-details { margin-top: 20px; }
+
+        /* Slider styles */
+        .img-box {
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .img-slider {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .img-item {
+            position: relative;
+            width: 100%;
+            flex-shrink: 0;
+        }
+
+        .img-item .item img {
+            width: 100%;
+            height: auto;
+        }
+
+        .navigation {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .prev-btn,
+        .next-btn {
+            cursor: pointer;
+            font-size: 24px;
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="#" onclick="showUpload()">Found a Product</a>
+        <a href="#" onclick="showGallery()">Find My Product</a>
+    </div>
+
+    <div class="container">
+        <div id="upload-section" class="hidden">
+            <h2>Upload Lost Product</h2>
+            <input type="file" id="file-input" accept="image/*"><br>
+            <input type="text" id="user-name" placeholder="Enter your Name"><br>
+            <input type="text" id="user-address" placeholder="Enter your Address"><br>
+            <input type="text" id="user-mobile" placeholder="Enter your Mobile No"><br>
+            <input type="text" id="user-location" placeholder="Location of Lost Product"><br>
+            <input type="datetime-local" id="lost-time" placeholder="Lost Date and Time"><br>
+            <button onclick="uploadProduct()">Upload</button>
+            <p id="success-message" class="hidden" style="color: green;">Successfully Uploaded!</p>
+        </div>
+
+        <div id="gallery-section" class="hidden">
+            <h2>Find Your Product</h2>
+            <input type="text" id="search-bar" onkeyup="searchProduct()" placeholder="Search product...">
+            <div class="gallery" id="product-gallery">
+                <div class="img-box">
+                    <div class="img-slider">
+                        <!-- Slider images will be dynamically added here -->
+                    </div>
+                </div>
+            </div>
+            <div class="navigation">
+                <span class="prev-btn">&#8249;</span>
+                <span class="next-btn">&#8250;</span>
+            </div>
+        </div>
+
+        <!-- Chat Section -->
+        <div id="chat-section" class="hidden">
+            <h2>Contact with Finder</h2>
+            <div class="chat-box" id="chat-box"></div>
+            <textarea id="chat-input" placeholder="Type your message..."></textarea>
+            <button onclick="sendMessage()">Send Message</button>
+            <button onclick="confirmFinder()">Confirm Finder</button>
+        </div>
+
+        <div id="found-details" class="found-details hidden">
+            <h3>Found Product Details:</h3>
+            <p id="found-name"></p>
+            <p id="found-address"></p>
+            <p id="found-mobile"></p>
+            <p id="found-location"></p>
+            <p id="found-time"></p>
+        </div>
+    </div>
+
+    <script>
+        let uploadedProducts = [];
+        let currentProduct = null;
+
+        function showUpload() {
+            document.getElementById('upload-section').classList.remove('hidden');
+            document.getElementById('gallery-section').classList.add('hidden');
+            document.getElementById('chat-section').classList.add('hidden');
+            document.getElementById('found-details').classList.add('hidden');
+        }
+
+        function showGallery() {
+            document.getElementById('gallery-section').classList.remove('hidden');
+            document.getElementById('upload-section').classList.add('hidden');
+            document.getElementById('chat-section').classList.add('hidden');
+            document.getElementById('found-details').classList.add('hidden');
+            displayGallery();
+        }
+
+        function uploadProduct() {
+            let file = document.getElementById('file-input').files[0];
+            let name = document.getElementById('user-name').value;
+            let address = document.getElementById('user-address').value;
+            let mobile = document.getElementById('user-mobile').value;
+            let location = document.getElementById('user-location').value;
+            let lostTime = document.getElementById('lost-time').value;
+
+            if (file && name && address && mobile && location && lostTime) {
+                let reader = new FileReader();
+                reader.onload = function(event) {
+                    let product = {
+                        image: event.target.result,
+                        name: name,
+                        address: address,
+                        mobile: mobile,
+                        location: location,
+                        lostTime: lostTime
+                    };
+                    uploadedProducts.push(product);
+                    document.getElementById('success-message').classList.remove('hidden');
+                    setTimeout(() => document.getElementById('success-message').classList.add('hidden'), 2000);
+                    document.getElementById('file-input').value = '';
+                    document.getElementById('user-name').value = '';
+                    document.getElementById('user-address').value = '';
+                    document.getElementById('user-mobile').value = '';
+                    document.getElementById('user-location').value = '';
+                    document.getElementById('lost-time').value = '';
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function displayGallery() {
+            let imgSlider = document.querySelector('.img-slider');
+            imgSlider.innerHTML = ''; // Clear previous slider items
+
+            uploadedProducts.forEach((product, index) => {
+                let imgItem = document.createElement('div');
+                imgItem.classList.add('img-item');
+
+                let imgContent = document.createElement('div');
+                imgContent.classList.add('item');
+                let img = document.createElement('img');
+                img.src = product.image;
+                img.alt = product.name;
+                imgContent.appendChild(img);
+                imgItem.appendChild(imgContent);
+                imgSlider.appendChild(imgItem);
+            });
+
+            // Initialize slider
+            slider();
+        }
+
+        function slider() {
+            let currentIndex = 0;
+            const items = document.querySelectorAll('.img-item');
+            const prevBtn = document.querySelector('.prev-btn');
+            const nextBtn = document.querySelector('.next-btn');
+
+            prevBtn.addEventListener('click', function() {
+                if (currentIndex > 0) {
+                    currentIndex--;
+                    updateSlider();
+                }
+            });
+
+            nextBtn.addEventListener('click', function() {
+                if (currentIndex < items.length - 1) {
+                    currentIndex++;
+                    updateSlider();
+                }
+            });
+
+            function updateSlider() {
+                let offset = -currentIndex * 100;
+                document.querySelector('.img-slider').style.transform = `translateX(${offset}%)`;
+            }
+        }
+
+        function searchProduct() {
+            let searchText = document.getElementById('search-bar').value.toLowerCase();
+            let images = document.querySelectorAll('.gallery img');
+            images.forEach(img => {
+                img.style.display = img.title.toLowerCase().includes(searchText) ? "block" : "none";
+            });
+        }
+
+        function viewProductDetails(index) {
+            currentProduct = uploadedProducts[index];
+            document.getElementById('gallery-section').classList.add('hidden');
+            document.getElementById('chat-section').classList.remove('hidden');
+            document.getElementById('found-details').classList.add('hidden');
+            document.getElementById('chat-box').innerHTML = '';
+        }
+
+        function sendMessage() {
+            let message = document.getElementById('chat-input').value;
+            if (message) {
+                let chatBox = document.getElementById('chat-box');
+                let newMessage = document.createElement('div');
+                newMessage.textContent = 'Lost User: ' + message;
+                chatBox.appendChild(newMessage);
+                document.getElementById('chat-input').value = '';
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+        }
+
+        function confirmFinder() {
+            if (currentProduct) {
+                document.getElementById('chat-section').classList.add('hidden');
+                document.getElementById('found-details').classList.remove('hidden');
+                document.getElementById('found-name').textContent = 'Name: ' + currentProduct.name;
+                document.getElementById('found-address').textContent = 'Address: ' + currentProduct.address;
+                document.getElementById('found-mobile').textContent = 'Mobile: ' + currentProduct.mobile;
+                document.getElementById('found-location').textContent = 'Location: ' + currentProduct.location;
+                document.getElementById('found-time').textContent = 'Lost Time: ' + currentProduct.lostTime;
+            }
+        }
+    </script>
+</body>
+</html>
