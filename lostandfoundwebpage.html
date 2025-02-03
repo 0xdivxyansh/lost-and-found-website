@@ -15,40 +15,6 @@
         .chat-box { background-color: #222; border-radius: 10px; padding: 10px; margin: 10px; max-height: 200px; overflow-y: auto; }
         .chat-box div { margin-bottom: 10px; }
         .found-details { margin-top: 20px; }
-
-        /* Slider styles */
-        .img-box {
-            width: 100%;
-            overflow: hidden;
-        }
-
-        .img-slider {
-            display: flex;
-            transition: transform 0.5s ease-in-out;
-        }
-
-        .img-item {
-            position: relative;
-            width: 100%;
-            flex-shrink: 0;
-        }
-
-        .img-item .item img {
-            width: 100%;
-            height: auto;
-        }
-
-        .navigation {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .prev-btn,
-        .next-btn {
-            cursor: pointer;
-            font-size: 24px;
-            margin: 0 10px;
-        }
     </style>
 </head>
 <body>
@@ -73,17 +39,7 @@
         <div id="gallery-section" class="hidden">
             <h2>Find Your Product</h2>
             <input type="text" id="search-bar" onkeyup="searchProduct()" placeholder="Search product...">
-            <div class="gallery" id="product-gallery">
-                <div class="img-box">
-                    <div class="img-slider">
-                        <!-- Slider images will be dynamically added here -->
-                    </div>
-                </div>
-            </div>
-            <div class="navigation">
-                <span class="prev-btn">&#8249;</span>
-                <span class="next-btn">&#8250;</span>
-            </div>
+            <div class="gallery" id="product-gallery"></div>
         </div>
 
         <!-- Chat Section -->
@@ -108,7 +64,6 @@
     <script>
         let uploadedProducts = [];
         let currentProduct = null;
-
         function showUpload() {
             document.getElementById('upload-section').classList.remove('hidden');
             document.getElementById('gallery-section').classList.add('hidden');
@@ -158,51 +113,15 @@
         }
 
         function displayGallery() {
-            let imgSlider = document.querySelector('.img-slider');
-            imgSlider.innerHTML = ''; // Clear previous slider items
-
+            let gallery = document.getElementById('product-gallery');
+            gallery.innerHTML = "";
             uploadedProducts.forEach((product, index) => {
-                let imgItem = document.createElement('div');
-                imgItem.classList.add('img-item');
-
-                let imgContent = document.createElement('div');
-                imgContent.classList.add('item');
                 let img = document.createElement('img');
                 img.src = product.image;
-                img.alt = product.name;
-                imgContent.appendChild(img);
-                imgItem.appendChild(imgContent);
-                imgSlider.appendChild(imgItem);
+                img.title = product.name + '\n' + product.location + '\n' + product.lostTime;
+                img.onclick = function() { viewProductDetails(index); };
+                gallery.appendChild(img);
             });
-
-            // Initialize slider
-            slider();
-        }
-
-        function slider() {
-            let currentIndex = 0;
-            const items = document.querySelectorAll('.img-item');
-            const prevBtn = document.querySelector('.prev-btn');
-            const nextBtn = document.querySelector('.next-btn');
-
-            prevBtn.addEventListener('click', function() {
-                if (currentIndex > 0) {
-                    currentIndex--;
-                    updateSlider();
-                }
-            });
-
-            nextBtn.addEventListener('click', function() {
-                if (currentIndex < items.length - 1) {
-                    currentIndex++;
-                    updateSlider();
-                }
-            });
-
-            function updateSlider() {
-                let offset = -currentIndex * 100;
-                document.querySelector('.img-slider').style.transform = `translateX(${offset}%)`;
-            }
         }
 
         function searchProduct() {
